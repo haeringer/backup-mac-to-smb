@@ -15,8 +15,11 @@ mntpnt="/Users/username/smbshare"
 share="//username@smbserver/user-share-dir"
 server="smbserver"
 
+# wait 2 minutes to prevent smb connection errors after login
+echo `date +'[%Y-%m-%d %H:%M:%S]'` "Starting backup script (sleep 2 minutes)"
+sleep 120
 
-echo `date +'[%Y-%m-%d %H:%M:%S]'` "Starting backup script: check mount & share server status"
+echo `date +'[%Y-%m-%d %H:%M:%S]'` "Check mount & share server status"
 
 # check if share is mounted
 if mount | grep "$share" > /dev/null; then
@@ -74,7 +77,10 @@ elif [ $ready == 1 ]; then
         exit 0
     else
         echo `date +'[%Y-%m-%d %H:%M:%S]'` "Running rsync backup..."
-        rsync -a --delete --ignore-errors "$HOME$backupdir" "$mntpnt"/
+        rsync --archive \
+            --exclude={.git/,.venv/} \
+            --delete --ignore-errors \
+            "$HOME$backupdir" "$mntpnt"/
         echo `date +'[%Y-%m-%d %H:%M:%S]'` "Done"
     fi
 else exit 2
