@@ -81,7 +81,11 @@ elif [ $ready == 1 ]; then
             --exclude={.git/,.venv/} \
             --delete --ignore-errors \
             "$HOME$backupdir" "$mntpnt"/
-        echo `date +'[%Y-%m-%d %H:%M:%S]'` "Done"
+        if [ $? == 0 ]; then
+            echo `date +'[%Y-%m-%d %H:%M:%S]'` "Done"
+        else
+            echo `date +'[%Y-%m-%d %H:%M:%S]'` "Rsync failed, check error log"
+        fi
     fi
 else exit 2
 fi
